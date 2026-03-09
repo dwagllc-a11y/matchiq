@@ -79,7 +79,7 @@ export default function Home() {
           </p>
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/pricing" style={{ background: C.grad, color: '#fff', padding: '14px 32px', borderRadius: '10px', fontWeight: '800', fontSize: '16px' }}>
-              Start Free — No Card Needed →
+             Get started →
             </Link>
             <Link href="/profile" style={{ background: 'rgba(255,255,255,0.06)', color: C.text, padding: '14px 32px', borderRadius: '10px', fontWeight: '700', fontSize: '16px', border: `1px solid ${C.border}` }}>
               Try Profile Builder
