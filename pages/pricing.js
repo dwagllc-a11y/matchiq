@@ -8,13 +8,13 @@ const C = {
   text: '#f0eaf8', muted: '#6b7280', dark: '#1a1028',
 }
 
-const features = [
+const proFeatures = [
   'AI Profile Builder (bio + prompts + photo order)',
   'Conversation Coach (exact lines to send)',
   'Date Planner (tailored to her interests)',
   'Red Flag Detector (honest analysis)',
   'Date Debrief (what to do next)',
-  'Unlimited uses on all tools',
+  'Unlimited uses on all 5 tools',
   'New tools as they launch',
 ]
 
@@ -37,41 +37,55 @@ export default function Pricing() {
     setLoading(null)
   }
 
+  const handleSingleCheckout = async () => {
+    setLoading('single')
+    try {
+      const res = await fetch('/api/subscribe-single', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tool: 'profile' })
+      })
+      const data = await res.json()
+      if (data.url) window.location.href = data.url
+    } catch {
+      alert('Something went wrong. Try again.')
+    }
+    setLoading(null)
+  }
+
   return (
     <>
       <Head>
         <title>Pricing — MatchIQ</title>
-        <meta name="description" content="MatchIQ Pro from $29.99/month. Unlimited access to all 5 AI dating tools. Or grab the lifetime deal for $299.99." />
+        <meta name="description" content="MatchIQ: $4.99 per tool, $29.99/month Pro, or $299.99 lifetime. Unlimited AI dating tools." />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </Head>
-
       <div style={{ minHeight: '100vh', background: C.bg, fontFamily: 'Inter, sans-serif', color: C.text }}>
         <nav style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(10,6,18,0.95)', backdropFilter: 'blur(12px)', borderBottom: `1px solid ${C.border}`, padding: '0 24px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/" style={{ fontWeight: '900', fontSize: '20px', background: C.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>MatchIQ</Link>
           <Link href="/" style={{ fontSize: '13px', color: C.muted }}>← Back</Link>
         </nav>
-
-        <div style={{ maxWidth: '860px', margin: '0 auto', padding: '60px 24px 80px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', padding: '60px 24px 80px', textAlign: 'center' }}>
           <h1 style={{ fontSize: 'clamp(28px,5vw,48px)', fontWeight: '900', marginBottom: '12px', letterSpacing: '-0.03em' }}>Simple Pricing</h1>
-          <p style={{ color: C.muted, fontSize: '16px', marginBottom: '52px' }}>Try free. Upgrade when you're ready. No BS.</p>
-
+          <p style={{ color: C.muted, fontSize: '16px', marginBottom: '52px' }}>Pay per tool or go unlimited. No BS.</p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '48px' }}>
 
-            {/* Free */}
+            {/* Single Use */}
             <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: '16px', padding: '32px', textAlign: 'left' }}>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: C.muted, letterSpacing: '0.08em', marginBottom: '12px' }}>FREE</div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: C.muted, letterSpacing: '0.08em', marginBottom: '12px' }}>SINGLE USE</div>
               <div style={{ fontSize: '36px', fontWeight: '900', marginBottom: '4px' }}>$4.99</div>
-              <div style={{ fontSize: '13px', color: C.muted, marginBottom: '24px' }}>forever</div>
+              <div style={{ fontSize: '13px', color: C.muted, marginBottom: '24px' }}>per tool, one-time</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '28px' }}>
-                {['1 use per tool', 'All 5 tools accessible', 'Pay once per tool'].map(f => (
+                {['1 use of any tool', 'Full AI output', 'No subscription needed'].map(f => (
                   <div key={f} style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '14px', color: C.muted }}>
                     <span style={{ color: '#10b981' }}>✓</span> {f}
                   </div>
                 ))}
               </div>
-              <Link href="/profile" style={{ display: 'block', textAlign: 'center', background: 'rgba(255,255,255,0.06)', border: `1px solid ${C.border}`, color: C.text, padding: '12px', borderRadius: '8px', fontWeight: '700', fontSize: '14px' }}>
-                Start Free
-              </Link>
+              <button onClick={handleSingleCheckout} disabled={loading === 'single'}
+                style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: `1px solid ${C.border}`, color: C.text, padding: '12px', borderRadius: '8px', fontWeight: '700', fontSize: '14px', cursor: 'pointer' }}>
+                {loading === 'single' ? 'Loading...' : 'Buy Single Use →'}
+              </button>
             </div>
 
             {/* Pro */}
@@ -81,45 +95,38 @@ export default function Pricing() {
               <div style={{ fontSize: '36px', fontWeight: '900', marginBottom: '4px' }}>$29.99</div>
               <div style={{ fontSize: '13px', color: C.muted, marginBottom: '24px' }}>per month · cancel anytime</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '28px' }}>
-                {features.map(f => (
+                {proFeatures.map(f => (
                   <div key={f} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', fontSize: '14px', color: C.text }}>
                     <span style={{ color: '#10b981', flexShrink: 0, marginTop: '1px' }}>✓</span> {f}
                   </div>
                 ))}
               </div>
-              <button
-                onClick={() => handleCheckout('monthly')}
-                disabled={loading === 'monthly'}
-                style={{ width: '100%', background: C.grad, color: '#fff', border: 'none', padding: '13px', borderRadius: '8px', fontWeight: '800', fontSize: '14px' }}
-              >
+              <button onClick={() => handleCheckout('monthly')} disabled={loading === 'monthly'}
+                style={{ width: '100%', background: C.grad, color: '#fff', border: 'none', padding: '13px', borderRadius: '8px', fontWeight: '800', fontSize: '14px', cursor: 'pointer' }}>
                 {loading === 'monthly' ? 'Loading...' : 'Get Pro Monthly →'}
               </button>
             </div>
 
             {/* Lifetime */}
-            <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: '16px', padding: '32px', textAlign: 'left' }}>
+            <div style={{ background: C.surface, border: '1px solid rgba(245,158,11,0.3)', borderRadius: '16px', padding: '32px', textAlign: 'left' }}>
               <div style={{ fontSize: '13px', fontWeight: '700', color: '#f59e0b', letterSpacing: '0.08em', marginBottom: '12px' }}>LIFETIME</div>
               <div style={{ fontSize: '36px', fontWeight: '900', marginBottom: '4px' }}>$299.99</div>
               <div style={{ fontSize: '13px', color: C.muted, marginBottom: '24px' }}>one-time · yours forever</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '28px' }}>
-                {[...features, 'All future tools included', 'Priority support'].map(f => (
+                {[...proFeatures, 'All future tools included', 'Priority support'].map(f => (
                   <div key={f} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', fontSize: '14px', color: C.text }}>
                     <span style={{ color: '#f59e0b', flexShrink: 0, marginTop: '1px' }}>✓</span> {f}
                   </div>
                 ))}
               </div>
-              <button
-                onClick={() => handleCheckout('lifetime')}
-                disabled={loading === 'lifetime'}
-                style={{ width: '100%', background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#fff', border: 'none', padding: '13px', borderRadius: '8px', fontWeight: '800', fontSize: '14px' }}
-              >
+              <button onClick={() => handleCheckout('lifetime')} disabled={loading === 'lifetime'}
+                style={{ width: '100%', background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#fff', border: 'none', padding: '13px', borderRadius: '8px', fontWeight: '800', fontSize: '14px', cursor: 'pointer' }}>
                 {loading === 'lifetime' ? 'Loading...' : 'Get Lifetime Access →'}
               </button>
             </div>
           </div>
-
           <div style={{ fontSize: '13px', color: C.muted }}>
-            Payments secured by Stripe · Cancel Pro anytime · Lifetime = pay once, use per use
+            Payments secured by Stripe · Cancel Pro anytime · Lifetime = pay once, use forever
           </div>
         </div>
       </div>
