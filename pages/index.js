@@ -86,7 +86,7 @@ export default function Home() {
             </Link>
           </div>
           <div style={{ fontSize: '12px', color: C.muted, marginTop: '14px' }}>
-            Free tier · Pro from $29.99/mo · Lifetime $99 one-time
+          $4.99 per tool · Pro from $29.99/mo · Lifetime $99 one-time
           </div>
         </div>
 
